@@ -1,14 +1,37 @@
 from flask import Flask
 from flask_socketio import SocketIO , emit
+import mysql.connector
+
 app = Flask(__name__)
 app.config["INFO"] = True
 app.config['SECRET_KEY'] = 'mysecret'
 socketio = SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
 
+
+def mysqlread():
+    mydb = mysql.connector.connect(
+      host="35.184.228.174",
+      user="root",
+      passwd="admin",
+      database="wcag"
+    )
+    
+    mycursor = mydb.cursor()
+    
+    mycursor.execute("SELECT parseUrl FROM parseurltable;")
+    
+    myresult = mycursor.fetchall()
+    a = []
+    for i in myresult:
+        a.append(i[0])
+    return a
+
+
 @app.route('/send', methods=['GET'])
 def some_function():
-    socketio.emit('testEmit', "Hi")
+    data = {"url":mysqlread()}
+    socketio.emit('testEmit', data)
     return "ok"
     
 '''
