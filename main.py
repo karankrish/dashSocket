@@ -19,7 +19,7 @@ def mysqlread():
     
     mycursor = mydb.cursor()
     
-    mycursor.execute("SELECT parseUrl FROM parseurltable;")
+    mycursor.execute('select parseUrl from parseurltable where parseurlstatus = "completed";')
     
     myresult = mycursor.fetchall()
     a = []
