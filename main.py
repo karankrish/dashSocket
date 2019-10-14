@@ -11,7 +11,7 @@ socketio.init_app(app, cors_allowed_origins="*")
 
 def mysqlread():
     mydb = mysql.connector.connect(
-      host="10.128.0.6",
+      host="35.184.228.174",
       user="root",
       passwd="admin",
       database="wcag"
