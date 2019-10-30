@@ -11,26 +11,36 @@ socketio.init_app(app, cors_allowed_origins="*")
 
 def mysqlread():
     mydb = mysql.connector.connect(
-      host="35.184.228.174",
+      host="34.70.48.176",
       user="root",
       passwd="admin",
       database="wcag"
     )
-    
+
     mycursor = mydb.cursor()
-    
-    mycursor.execute('select parseUrl from parseurltable where parseurlstatus = "completed";')
-    
+
+    mycursor.execute('select home_domain,parse_url from parseurltable where parseurlstatus = "completed";')
+
     myresult = mycursor.fetchall()
-    a = []
+    domainname=set()
     for i in myresult:
-        a.append(i[0])
-    return a
+        domainname.add(i[0])
+    data ={}   
+    for i in domainname:
+        a=[]
+        for j in myresult:
+            if i == j[0]:
+                a.append(j[1])
+            else:
+                pass
+        data[i] = a
+        
+    return data
 
 
 @app.route('/send', methods=['GET'])
 def some_function():
-    data = {"url":mysqlread()}
+    data = mysqlread()
     socketio.emit('testEmit', data)
     return "ok"
     
